@@ -1,33 +1,25 @@
-import Versions from './components/Versions'
-import mapLogo from './assets/map-logo.svg'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css';
+
+import { useEffect } from 'react'
 
 function App(): JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+
+  useEffect(() => {
+    var map = L.map('map').setView([51.505, -0.09], 13);
+    
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+
+  map.invalidateSize()
+  })
+
 
   return (
     <>
-      <img alt="logo" className="logo" src={mapLogo} />
-      <div className="creator">Powered by electron-vite</div>
-      <div className="text">
-        Open any <span className="react">GPX</span>
-        &nbsp;file with <span className="ts">ease</span>
-      </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Learn More
-          </a>
-        </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Get Started
-          </a>
-        </div>
-      </div>
-      <Versions></Versions>
+        <div id="map" style={{ width: '100%', height: '670px' }}></div>
     </>
   )
 }

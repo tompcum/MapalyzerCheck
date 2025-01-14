@@ -3,23 +3,32 @@ import React, { useState } from 'react'; // Correct import here
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import Upload from './Upload';
+import './assets/App.css';
 
 const Main = (): JSX.Element => {
-  const [showApp, setShowApp] = useState(false); // Corrected to use `useState`
+  const [showApp, setShowApp] = useState(false); // Track which component to display
+  const [gpxFile, setGpxFile] = useState<File | null>(null); // Store the selected file
 
-  const toggleComponent = () => {
-    setShowApp((prevState) => !prevState);
+  // Callback function to handle file selection
+  const handleFileSelect = (file: File) => {
+    setGpxFile(file);
+    setShowApp(true); // Switch to App component once a file is selected
   };
 
   return (
     <div>
-      {/* Conditionally render the components */}
-      {showApp ? <App /> : <Upload />}
+      {/* Conditionally render the components based on showApp state */}
+      {showApp ? (
+        <App gpxFile={gpxFile} />
+      ) : (
+        <Upload onFileSelect={handleFileSelect} />
+      )}
       
       {/* Button to toggle between components */}
-      <button onClick={toggleComponent}>
-        {showApp ? 'Show Upload Component' : 'Show App Component'}
+      <button onClick={() => setShowApp(!showApp)}>
+        {showApp ? 'Go to Upload Tab' : 'Go to App Tab'}
       </button>
+      <button className="btn btn-lg">Large</button>
     </div>
   );
 };

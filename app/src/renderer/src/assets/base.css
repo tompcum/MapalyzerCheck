@@ -24,9 +24,7 @@
 }
 
 :root {
-  --color-background: var(--ev-c-black);
-  --color-background-soft: var(--ev-c-black-soft);
-  --color-background-mute: var(--ev-c-black-mute);
+
 
   --color-text: var(--ev-c-text-1);
 }
@@ -46,7 +44,6 @@ ul {
 body {
   min-height: 100vh;
   color: var(--color-text);
-  background: var(--color-background);
   line-height: 1.6;
   font-family:
     Inter,

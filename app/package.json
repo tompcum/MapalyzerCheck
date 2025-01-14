@@ -23,9 +23,11 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
+    "autoprefixer": "^10.4.20",
     "electron-updater": "^6.1.7",
     "leaflet": "^1.9.4",
-    "leaflet-gpx": "^2.1.2"
+    "leaflet-gpx": "^2.1.2",
+    "postcss": "^8.5.1"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",

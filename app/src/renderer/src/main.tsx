@@ -23,12 +23,6 @@ const Main = (): JSX.Element => {
       ) : (
         <Upload onFileSelect={handleFileSelect} />
       )}
-      
-      {/* Button to toggle between components */}
-      <button onClick={() => setShowApp(!showApp)}>
-        {showApp ? 'Go to Upload Tab' : 'Go to App Tab'}
-      </button>
-      <button className="btn btn-lg">Large</button>
     </div>
   );
 };

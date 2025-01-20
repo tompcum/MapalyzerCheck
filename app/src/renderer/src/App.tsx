@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import markerIconPng from 'leaflet/dist/images/marker-icon.png';
 import 'leaflet-gpx';
 import './assets/App.css';
 
@@ -12,10 +13,17 @@ function App({ gpxFile }: AppProps): JSX.Element {
   useEffect(() => {
     if (gpxFile) {
       const map = L.map('map');
-      
+
+      // Fix broken image URLs in Leaflet's default marker icon
+      delete L.Icon.Default.prototype._getIconUrl;
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl: markerIconPng,
+        iconUrl: markerIconPng,
+        shadowUrl: '',
+      });
+
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       }).addTo(map);
 
       const fileURL = URL.createObjectURL(gpxFile); // Create URL from the uploaded file
@@ -30,9 +38,13 @@ function App({ gpxFile }: AppProps): JSX.Element {
       let distance = document.getElementById('distance');
       let averagehr = document.getElementById('averagehr');
 
+      let GpxName = document.getElementById('GpxName');
+
       const gpx = new L.GPX(fileURL, options).on('loaded', (e) => {
         map.fitBounds(e.target.getBounds());
         const track = e.target;
+
+        let get_name = track.get_name();
 
         // Cutting down start time to only show hours, minutes, and seconds
         let get_start_time = track.get_start_time();
@@ -59,6 +71,7 @@ function App({ gpxFile }: AppProps): JSX.Element {
         distancekm = distancekm.toFixed(2);
         distancekm.toString();
 
+        GpxName.innerHTML = get_name;
         starttime.innerHTML = 'Start time: ' + start;
         endtime.innerHTML = 'End time: ' + end;
         distance.innerHTML = 'Distance: ' + distancekm + ' km';
@@ -69,16 +82,29 @@ function App({ gpxFile }: AppProps): JSX.Element {
 
   return (
     <>
-      <div className="navbar">
-        <div className="grid">
+      <div id='GpxName' className="name justify-left ml-12 text-8xl"></div>
+      <div className="navbar justify-center items-center h-64">
+      <div className="flex min-h-full place-content-center text-white text-lg border-solid border-2 border-white p-4 gap-4">
+        <div className="flex flex-col items-center justify-center border-2 border-white p-2">
           <div id="starttime">Failed to Load, Please Reload</div>
+        </div>
+        <div className="flex flex-col items-center justify-center border-2 border-white p-2">
           <div id="endtime">Failed to Load, Please Reload</div>
+        </div>
+        <div className="flex flex-col items-center justify-center border-2 border-white p-2">
           <div id="distance">Failed to Load, Please Reload</div>
+        </div>
+        <div className="flex flex-col items-center justify-center border-2 border-white p-2">
           <div id="averagehr">Failed to Load, Please Reload</div>
         </div>
       </div>
+      </div>
 
-      <div id="map" style={{ minWidth: '900px', width: '100%', height: '630px' }}></div>
+
+      <div className="flex justify-center items-center">
+        <div id="map" className="min-w-96 w-4/5 min-h-[630px] h-3/5"></div>
+      </div>
+
     </>
   );
 }

@@ -1,9 +1,7 @@
 @import './base.css';
-@import './gpx.css';
 body {
   align-items: center;
   justify-content: center;
-  overflow: hidden;
   background-size: cover;
   user-select: none;
 }

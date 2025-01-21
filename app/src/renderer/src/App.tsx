@@ -37,6 +37,10 @@ function App({ gpxFile }: AppProps): JSX.Element {
       let endtime = document.getElementById('endtime');
       let distance = document.getElementById('distance');
       let averagehr = document.getElementById('averagehr');
+      let movingpace = document.getElementById('movingpace');
+      let elevationgain = document.getElementById('elevationgain');
+      let averagecadence = document.getElementById('averagecadence');
+
 
       let GpxName = document.getElementById('GpxName');
 
@@ -71,11 +75,25 @@ function App({ gpxFile }: AppProps): JSX.Element {
         distancekm = distancekm.toFixed(2);
         distancekm.toString();
 
+        let get_movingpace = track.get_moving_pace();
+        get_movingpace = get_movingpace / 60000; // convert milliseconds to minutes
+        get_movingpace = get_movingpace.toFixed(2);
+
+        let get_elevation = track.get_elevation_gain();
+        get_elevation = get_elevation.toFixed(2);
+
+        let get_cadence = track.get_average_cadence();
+        get_cadence = get_cadence.toFixed(2);
+
+
         GpxName.innerHTML = get_name;
-        starttime.innerHTML = 'Start time: ' + start;
-        endtime.innerHTML = 'End time: ' + end;
-        distance.innerHTML = 'Distance: ' + distancekm + ' km';
-        averagehr.innerHTML = 'Average HR: ' + track.get_average_hr();
+        starttime.innerHTML = `Start time: ${start}`;
+        endtime.innerHTML = `End time: ${end}`;
+        distance.innerHTML = `Distance: ${distancekm} km`;
+        averagehr.innerHTML = `Average HR: ${track.get_average_hr()}`;
+        movingpace.innerHTML = `Pace: ${get_movingpace}min/km`;
+        elevationgain.innerHTML = `Elevation Gain: ${get_elevation}m`;
+        averagecadence.innerHTML = `Average Cadence: ${get_cadence}`;
       }).addTo(map);
     }
   }, [gpxFile]); // Re-run the effect when the gpxFile prop changes
@@ -83,26 +101,36 @@ function App({ gpxFile }: AppProps): JSX.Element {
   return (
     <>
       <div id='GpxName' className="name justify-left ml-12 text-8xl"></div>
-      <div className="navbar justify-center items-center h-64">
-      <div className="flex min-h-full place-content-center text-white text-lg border-solid border-2 border-white p-4 gap-4">
-        <div className="flex flex-col items-center justify-center border-2 border-white p-2">
-          <div id="starttime">Failed to Load, Please Reload</div>
+      <div className="flex justify-center items-center mb-4">
+        <div className="flex flex-wrap w-4/5 h-96 text-white text-lg border-solid border-2 border-white gap-4">
+          <div className="flex-auto items-center justify-center border-2 border-white p-2">
+            <div id="starttime">Failed to Load, Please Reload</div>
+          </div>
+          <div className="flex-auto items-center justify-center border-2 border-white p-2">
+            <div id="endtime">Failed to Load, Please Reload</div>
+          </div>
+          
+          <div className="fflex-auto items-center justify-center border-2 border-white p-2">
+            <div id="distance">Failed to Load, Please Reload</div>
+          </div>
+          <div className="flex-auto items-center justify-center border-2 border-white p-2">
+            <div id="averagehr">Failed to Load, Please Reload</div>
+          </div>
+          <div className="flex-auto items-center justify-center border-2 border-white p-2">
+            <div id="movingpace">Failed to Load, Please Reload</div>
+          </div>
+          <div className="flex-auto items-center justify-center border-2 border-white p-2">
+            <div id="elevationgain">Failed to Load, Please Reload</div>
+          </div>
+          <div className="flex-auto items-center justify-center border-2 border-white p-2">
+            <div id="averagecadence">Failed to Load, Please Reload</div>
+          </div>
         </div>
-        <div className="flex flex-col items-center justify-center border-2 border-white p-2">
-          <div id="endtime">Failed to Load, Please Reload</div>
-        </div>
-        <div className="flex flex-col items-center justify-center border-2 border-white p-2">
-          <div id="distance">Failed to Load, Please Reload</div>
-        </div>
-        <div className="flex flex-col items-center justify-center border-2 border-white p-2">
-          <div id="averagehr">Failed to Load, Please Reload</div>
-        </div>
-      </div>
       </div>
 
 
       <div className="flex justify-center items-center">
-        <div id="map" className="min-w-96 w-4/5 min-h-[630px] h-3/5"></div>
+        <div id="map" className="w-4/5 min-h-[630px] h-3/5"></div>
       </div>
 
     </>

@@ -30,17 +30,27 @@ function App({ gpxFile }: AppProps): JSX.Element {
 
       const options = {
         async: true,
-        polyline_options: { color: 'red' },
+        polyline_options: { color: 'blue' },
       };
-
       let starttime = document.getElementById('starttime');
+
       let endtime = document.getElementById('endtime');
+
+      let totaltime = document.getElementById('totaltime');
+
+      let movingtime = document.getElementById('movingtime');
+
       let distance = document.getElementById('distance');
+
       let averagehr = document.getElementById('averagehr');
+
       let movingpace = document.getElementById('movingpace');
+
       let elevationgain = document.getElementById('elevationgain');
+
       let averagecadence = document.getElementById('averagecadence');
 
+      let temperature = document.getElementById('temperature');
 
       let GpxName = document.getElementById('GpxName');
 
@@ -70,14 +80,19 @@ function App({ gpxFile }: AppProps): JSX.Element {
         let endseconds = get_end_time.getSeconds();
         let end = endhours + ':' + endminutes + ':' + endseconds;
 
+        let totaltimem = track.get_total_time();
+        let formattedtime = track.get_duration_string_iso(totaltimem);
+
+        let movingtimem = track.get_moving_time();
+        let formattedmovingtime = track.get_duration_string_iso(movingtimem);
+
         let distancem = track.get_distance();
         let distancekm = distancem / 1000; // Convert meters to kilometers
         distancekm = distancekm.toFixed(2);
         distancekm.toString();
 
         let get_movingpace = track.get_moving_pace();
-        get_movingpace = get_movingpace / 60000; // convert milliseconds to minutes
-        get_movingpace = get_movingpace.toFixed(2);
+        get_movingpace = track.get_duration_string(get_movingpace, true);
 
         let get_elevation = track.get_elevation_gain();
         get_elevation = get_elevation.toFixed(2);
@@ -85,15 +100,27 @@ function App({ gpxFile }: AppProps): JSX.Element {
         let get_cadence = track.get_average_cadence();
         get_cadence = get_cadence.toFixed(2);
 
+        let get_temp = track.get_average_temp();
+        get_temp = get_temp.toFixed(2);
+
 
         GpxName.innerHTML = get_name;
         starttime.innerHTML = `Start time: ${start}`;
         endtime.innerHTML = `End time: ${end}`;
+        totaltime.innerHTML = `Total Time: ${formattedtime}`;
+        movingtime.innerHTML = `Moving Time: ${formattedmovingtime}`;
         distance.innerHTML = `Distance: ${distancekm} km`;
         averagehr.innerHTML = `Average HR: ${track.get_average_hr()}`;
-        movingpace.innerHTML = `Pace: ${get_movingpace}min/km`;
+        movingpace.innerHTML = `Pace: ${get_movingpace}`;
         elevationgain.innerHTML = `Elevation Gain: ${get_elevation}m`;
         averagecadence.innerHTML = `Average Cadence: ${get_cadence}`;
+        if (get_temp == 'NaN') {
+          let temperatureParent = document.getElementById('temperature').parentNode;
+          temperature.remove();
+          temperatureParent.remove();
+        } else {
+          temperature.innerHTML = `Average Temp: ${get_temp}°C`;
+        }
       }).addTo(map);
     }
   }, [gpxFile]); // Re-run the effect when the gpxFile prop changes
@@ -109,7 +136,15 @@ function App({ gpxFile }: AppProps): JSX.Element {
           <div className="flex-auto items-center justify-center border-2 border-white p-2">
             <div id="endtime">Failed to Load, Please Reload</div>
           </div>
-          
+          <div className="flex-auto items-center justify-center border-2 border-white p-2">
+            <div id="totaltime">Failed to Load, Please Reload</div>
+          </div>
+          <div className="flex-auto items-center justify-center border-2 border-white p-2">
+            <div id="movingtime">Failed to Load, Please Reload</div>
+          </div>
+          <div className="flex-auto items-center justify-center border-2 border-white p-2">
+            <div id="averagecadence">Failed to Load, Please Reload</div>
+          </div>
           <div className="fflex-auto items-center justify-center border-2 border-white p-2">
             <div id="distance">Failed to Load, Please Reload</div>
           </div>
@@ -123,7 +158,7 @@ function App({ gpxFile }: AppProps): JSX.Element {
             <div id="elevationgain">Failed to Load, Please Reload</div>
           </div>
           <div className="flex-auto items-center justify-center border-2 border-white p-2">
-            <div id="averagecadence">Failed to Load, Please Reload</div>
+            <div id="temperature">Failed to Load, Please Reload</div>
           </div>
         </div>
       </div>

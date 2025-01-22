@@ -4,5 +4,6 @@
 
 body {
     background-color: theme('colors.base-100');
+    font-family: theme('fontFamily.mono');
   }
   

@@ -1,3 +1,5 @@
+# Går det bra , gjorde bara en check! Tommen was here  
+
 # app
 
 An Electron application with React and TypeScript
